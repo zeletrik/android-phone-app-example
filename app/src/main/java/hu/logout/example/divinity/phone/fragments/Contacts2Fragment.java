@@ -4,12 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +37,6 @@ public class Contacts2Fragment extends Fragment {
         return root;
     }
 
-    // Request code for READ_CONTACTS.
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
     private void requestContacts() {
@@ -50,16 +47,6 @@ public class Contacts2Fragment extends Fragment {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mContactListView.setAdapter(new ContactsAdapter(getActivity()));
-            } else {
-                Log.e("Permissions", "Access denied");
-            }
-        }
-    }
 
 
 }
