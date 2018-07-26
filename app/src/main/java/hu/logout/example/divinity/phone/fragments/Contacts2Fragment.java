@@ -20,9 +20,12 @@ import hu.logout.example.divinity.phone.recycleview.ContactsAdapter;
  */
 public class Contacts2Fragment extends Fragment {
 
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+
     private RecyclerView mContactListView;
 
-    public Contacts2Fragment() {}
+    public Contacts2Fragment() {
+    }
 
 
     @Override
@@ -31,22 +34,18 @@ public class Contacts2Fragment extends Fragment {
         // Inflate the fragment layout
         View root = inflater.inflate(R.layout.contacts_list, container, false);
         mContactListView = root.findViewById(R.id.contact_list);
-        mContactListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mContactListView.setItemAnimator(new DefaultItemAnimator());
         requestContacts();
         return root;
     }
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
     private void requestContacts() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             mContactListView.setAdapter(new ContactsAdapter(getActivity()));
+            mContactListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mContactListView.setItemAnimator(new DefaultItemAnimator());
+        } else {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
         }
     }
-
-
-
 }

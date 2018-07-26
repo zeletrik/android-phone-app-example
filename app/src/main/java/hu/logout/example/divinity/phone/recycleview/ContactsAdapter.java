@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +104,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
        if (contacts.getProfilePic() != null) {
             Uri myuri = Uri.parse(contacts.getProfilePic());
             contact_image.setImageURI(myuri);
-        }
+       } else {
+           contact_image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_person_black_24dp));
+       }
 
     }
 

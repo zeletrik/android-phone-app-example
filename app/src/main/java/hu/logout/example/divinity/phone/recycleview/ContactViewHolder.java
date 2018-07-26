@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import hu.logout.example.divinity.phone.R;
 
@@ -25,11 +26,14 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactnum));
+            public void onClick(View View) {
+                Context context = View.getContext();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactnum.getText()));
                 if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "Calling " + contactname.getText() + " not permitted!",
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });

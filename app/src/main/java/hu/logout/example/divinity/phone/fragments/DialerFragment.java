@@ -37,36 +37,29 @@ public class DialerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View rootView = inflater.inflate(R.layout.dialer_fragment, container, false);
 
         editText = rootView.findViewById(R.id.editText);
-
         fab = rootView.findViewById(R.id.callFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (requestPhoneCall()) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + editText.getText().toString()));
-                    startActivity(intent);
-
-                } else {
-                    Toast.makeText(getActivity(), "Calling " + editText.getText().toString() + " Not permited!",
-                            Toast.LENGTH_LONG).show();
-                }
+                startPhoneCall(editText.getText().toString());
             }
         });
 
         return rootView;
     }
 
-    private boolean requestPhoneCall() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+    private void startPhoneCall(String numberToCall) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CALL_PHONE);
+            Toast.makeText(getActivity(), "Calling " + numberToCall + " Not permited!",
+                    Toast.LENGTH_LONG).show();
         } else {
-            return true;
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + numberToCall));
+            startActivity(intent);
         }
-        return false;
     }
 
 }

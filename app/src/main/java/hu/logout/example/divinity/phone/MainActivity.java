@@ -31,6 +31,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActivityCompat.requestPermissions(
+                MainActivity.this,
+                new String[]{
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_CONTACTS},
+                MY_PERMISSIONS);
+
+
+
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
@@ -39,16 +49,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         viewPager = findViewById(R.id.container);
-        setupViewPager(viewPager);
+
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_CONTACTS},
-                MY_PERMISSIONS);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -56,8 +61,29 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new DialerFragment(), "Dialer");
         adapter.addFragment(new Contacts2Fragment(), "Contacts");
         viewPager.setAdapter(adapter);
-
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS: {
+                // Ha a kérelmezésel lett utasítva a tömb üres
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("REQUESTS:", "GRANTED");
+                    // Ha mind a két jog meg lett adva csak akkor inicializáljuk a ViewPager-t
+                    setupViewPager(viewPager);
+
+                } else {
+                    Log.d("REQUESTS:", "DENIED");
+                }
+                return;
+            }
+        }
+    }
+
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -87,23 +113,4 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("REQUEST:", "GRANTED");
-
-                } else {
-                    Log.d("REQUEST:", "DENIED");
-                }
-                return;
-            }
-        }
-    }
-
 }
